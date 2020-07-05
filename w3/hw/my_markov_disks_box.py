@@ -1,6 +1,7 @@
 import random
 import math
 import pylab
+import cmath
 import os
 
 
@@ -56,24 +57,60 @@ def save_cache(filename):
             f.write(str(a[0]) + ' ' + str(a[1]) + '\n')
 
 
+def delx_dely(x, y):
+    d_x = (x[0] - y[0]) % 1.0
+    if d_x > 0.5: d_x -= 1.0
+    d_y = (x[1] - y[1]) % 1.0
+    if d_y > 0.5: d_y -= 1.0
+    return d_x, d_y
+
+def Psi_6(L, sigma):
+    sum_vector = 0j
+    for i in range(N):
+        vector  = 0j
+        n_neighbor = 0
+        for j in range(N):
+            if dist(L[i], L[j]) < 2.8 * sigma and i != j:
+                n_neighbor += 1
+                dx, dy = delx_dely(L[j], L[i])
+                angle = cmath.phase(complex(dx, dy))
+                vector += cmath.exp(6.0j * angle)
+        if n_neighbor > 0:
+            vector /= n_neighbor
+        sum_vector += vector
+    return sum_vector / float(N)
+
+
 if __name__ == '__main__':
     N = 64
-    eta = 0.72
-    n_steps = 10000
-    # eta = N * (pi * sigma ** 2)
-    sigma = math.sqrt(eta/(N*math.pi))
-    delta = 0.5*sigma
-    filename = 'disk_configuration_N%i_eta%.2f.txt' % (N, eta)
-    L = load_cache(filename, sigma, N)
-    for steps in range(n_steps):
-        current_particle = random.choice(L)
-        current_particle_next = [current_particle[0] + random.uniform(-delta, delta),
-                                 current_particle[1] + random.uniform(-delta, delta)]
-        min_dist = min(dist(other_particle, current_particle_next)
-                       for other_particle in L if other_particle != current_particle)
-        # No overlap, move is accepted
-        if min_dist >= 2*sigma:
-            current_particle[:] = current_particle_next
-            L = [[p[0] % 1.0, p[1] % 1.0] for p in L]
-    save_cache(filename)
-    show_conf(L, sigma, 'hello', '1.png')
+    eta_array = [x / 100. for x in range(72, 19, -2)]
+    psi_array = []
+    for eta in eta_array:
+        print('eta', eta)
+        n_steps = 10000
+        # eta = N * (pi * sigma ** 2)
+        sigma = math.sqrt(eta / (N * math.pi))
+        delta = 0.5 * sigma
+        filename = 'disk_configuration_N%i_eta%.2f.txt' % (N, eta)
+        L = load_cache(filename, sigma, N)
+        history = []
+        for steps in range(n_steps):
+            if steps % 100 == 0:
+                history.append(abs(Psi_6(L, sigma)))
+            current_particle = random.choice(L)
+            current_particle_next = [current_particle[0] + random.uniform(-delta, delta),
+                                     current_particle[1] + random.uniform(-delta, delta)]
+            min_dist = min(dist(other_particle, current_particle_next)
+                           for other_particle in L if other_particle != current_particle)
+            # No overlap, move is accepted
+            if min_dist >= 2*sigma:
+                current_particle[:] = current_particle_next
+                L = [[p[0] % 1.0, p[1] % 1.0] for p in L]
+        psi_array.append(sum(history)/len(history))
+    pylab.plot(eta_array, psi_array)
+    pylab.savefig('eta.png')
+    pylab.xlabel('eta')
+    pylab.ylabel('|psi_6|')
+    pylab.title('|psi_6| (eta)')
+    pylab.show()
+    pylab.close()
