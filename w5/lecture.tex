@@ -1,4 +1,4 @@
-% !TEX root = main.tex
+%!TEX root=../main.tex
 \setcounter{chapter}{4}
 \begin{lecture}[Матрицы плотности и Path Integral]
 \section{Квантовый гармонический осциллятор}
@@ -37,7 +37,7 @@
 Это отображено на картинке \ref{fig:harmonic_levels}.
 
 Все эти функции можно получить через программу \texttt{harmonic\_wavefunction.py} (листинг \ref{code:psi_harmonic_analytical}).
-\pythonfile{../w5/programs_lecture_5/harmonic_wavefunction}{Рекурсивная формула для подсчета $\psi (x)$ (\texttt{harminic\_wavefunction.py})}{code:psi_harmonic_analytical}
+\pythonfile{programs_lecture_5/harmonic_wavefunction}{Рекурсивная формула для подсчета $\psi (x)$ (\texttt{harminic\_wavefunction.py})}{code:psi_harmonic_analytical}
 
 Основные свойства $\psi$:
 \begin{itemize}
@@ -49,7 +49,7 @@
 Для этого авторы предлагают насчитать $\cfrac{H \psi_{n}}{\psi_{n} }\, $ при разных $x$ и убедиться, что это примерно константа.
 Сама программа для проверки приведена на листинге \ref{code:psi_harmonic_check}.
 
-\pythonfile{../w5/programs_lecture_5/harmonic_wavefunction_check}{Проверка аналитической формулы для $\psi_\text{harmonic} (x)$ (\texttt{hamonic\_wavefunction\_check.py})}{code:psi_harmonic_check}
+\pythonfile{programs_lecture_5/harmonic_wavefunction_check}{Проверка аналитической формулы для $\psi_\text{harmonic} (x)$ (\texttt{hamonic\_wavefunction\_check.py})}{code:psi_harmonic_check}
 
 Обратите внимание, что в строке (19) используется дискретная аппроксимация второй производной (вычматы!).
 \begin{figure}[!h]
@@ -245,7 +245,7 @@
 
 В листинге \ref{code:matrix_square_harmonic} можно увидеть, как меняется от этого heatmap для $\rho (x, x', \beta)$.
 
-\pythonfile{../w5/programs_lecture_5/matrix_square_harmonic}{Программа для подсчета $\rho$ в приближении Trotter decomposition(\texttt{matrix\_square\_harmonic.py})}{code:matrix_square_harmonic}
+\pythonfile{programs_lecture_5/matrix_square_harmonic}{Программа для подсчета $\rho$ в приближении Trotter decomposition(\texttt{matrix\_square\_harmonic.py})}{code:matrix_square_harmonic}
 
 \section{Path integral и метод Монте-Карло}
 Вычислять $\rho$ через \eqref{eq:rho-via-E_n-coord_x} очень затратно, поскольку почти невозможно удержать в памяти все $E_n$ и дискретную аппроксимацию $\psi (x)$.
@@ -329,6 +329,6 @@
 Разложение Trotter находится в строках 18, 21.
 Обратите внимание, что в нем стоит множитель $1 /2$, а не $1 /4$, как можно было бы заключить из $e^{-\frac{\beta}{2}\, V(x)} = e^{-\frac{\beta}{2}\, \frac{x^2}{2}\,}$.
 Причина этому --- перемножение двух таких экспонент на стыке $\rho (x_{i-1}, x_i, \beta /N) \rho (x_i, x_{i+1} , \beta /N)$ в \eqref{eq:Z_N-times_convolution} (см. формулу Trotter decomposition \eqref{eq:trotter-decomposition-definition}).
-\pythonfile{../w5/programs_lecture_5/naive_harmonic_path}{Программа для подсчета путей в приближении Trotter decomposition для гармонического потенциала (\texttt{naive\_harmonic\_path.py})}{code:naive_harmonic_path}
+\pythonfile{programs_lecture_5/naive_harmonic_path}{Программа для подсчета путей в приближении Trotter decomposition для гармонического потенциала (\texttt{naive\_harmonic\_path.py})}{code:naive_harmonic_path}
 
 \end{lecture}

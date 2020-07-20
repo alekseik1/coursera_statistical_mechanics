@@ -1,0 +1,5 @@
+PWD /Users/a.kozharin/github_projects/coursera_statistical_mechanics/latex_notes/tech_stuff
+INPUT /Users/a.kozharin/Library/Application Support/MiKTeX/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt
+INPUT title_page.tex
+OUTPUT title_page.log
+INPUT /Users/a.kozharin/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmbx10.tfm
