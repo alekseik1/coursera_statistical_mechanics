@@ -4,3 +4,10 @@ services:
 
 script:
   - docker run -v `pwd`:/data:Z -w /data/latex_notes/ sigan/latex latexmk -pdf -pdflatex="pdflatex %O %S" main
+deploy:
+  provider: releases
+  skip-cleanup: true
+  api_key: $GH_TOKEN
+  file_glob: true
+  file: "*.pdf"
+  overwrite: true
