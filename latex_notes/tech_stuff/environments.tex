@@ -1,0 +1,64 @@
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+	\nobreak\extramarks{#1}{#1 продолжается на следующей странице\ldots}\nobreak
+}
+
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+	\nobreak\extramarks{#1}{#1 продолжается на следующей странице\ldots}\nobreak
+	\nobreak\extramarks{#1}{}\nobreak
+}
+
+
+
+\setcounter{secnumdepth}{1} % Removes default section numbers
+
+\newcounter{lectureCounter}	% Номер лекции
+\newcommand{\lectureName}{}
+
+
+\newenvironment{lecture}[1][Часть \arabic{lectureCounter}]{ % Делает лекцию; имеет дефолтное имя
+	\stepcounter{lectureCounter} % Увеличиваем счетчик лекций
+	\renewcommand{\lectureName}{#1} % Называем лекцию
+	\def\chaptername{Лекция} % Семинар вместо главы
+	\chapter{\lectureName} % Помечаем лекцию как главу
+	\enterProblemHeader{\lectureName} % Линии сверху и снизу, на пафосе :3
+	}{\exitProblemHeader{\lectureName} % Линии сверху и снизу, на пафосе :3
+}
+
+\newcommand{\textinbox}[1]{ % Просто текст в рамке
+	\noindent\framebox[\columnwidth][c]{
+		\begin{minipage}{
+				0.98\columnwidth
+			}
+			#1
+		\end{minipage}
+	}
+}
+
+
+
+\newcommand{\lecSectionName}{}
+\newcounter{lectureSectionCounter}
+\newenvironment{lecSection}[1][Подробнее]{ % Делает секцию лекции
+	\stepcounter{lectureSectionCounter}
+	\renewcommand{\lecSectionName}{#1} % Называем секцию
+	\section{\lecSectionName} % Секция используется как секция
+	\enterProblemHeader{\lecSectionName} % Линии сверху и снизу, на пафосе :3
+	}{\enterProblemHeader{\lectureName} % Линии сверху и снизу, на пафосе :3
+}
+
+
+
+\newcommand{\lecSubsectionName}{}
+\newcounter{lectureSubsectionCounter}
+\newenvironment{lecSubsection}[1]{ % Делает субсекцию секции лекции
+	\stepcounter{lectureSubsectionCounter}
+	\renewcommand{\lecSubsectionName}{#1} % Называем субсекцию
+	\subsection{\lecSubsectionName} % Субсекция используется как субсекция
+	\enterProblemHeader{\lectureName\ : \lecSubsectionName} % Линии сверху и снизу, на пафосе :3
+}{\enterProblemHeader{\lectureName} % Линии сверху и снизу, на пафосе :3
+}
+
+\newcommand{\Sp}{\ensuremath{\text{Sp}\,}}
