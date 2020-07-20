@@ -1,12 +1,19 @@
 % !TEX root = main.tex
 \setcounter{chapter}{4}
-\begin{lecture}[Много полезной хрени]
+\begin{lecture}[Матрицы плотности и Path Integral]
 \section{Квантовый гармонический осциллятор}
 Задается потенциалом
 \begin{equation}
     \label{eq:harmonic_potential_def}
     V(x) = \frac{1}{2}\, m \omega^2 x^2
 \end{equation}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \label{fig:harmonic_levels}
+    \centering
+    \includegraphics[width=\linewidth]{fig/harmonic_levels}
+    \caption{Потенциал $V(x) = \frac{1}{2}\, x^2$, его уровни энергии и волновые функции.} 
+\end{wrapfigure}
 
 Соотвествующее уравнение Шредингера:
 \begin{equation}
@@ -30,13 +37,6 @@
 Это отображено на картинке \ref{fig:harmonic_levels}.
 
 Все эти функции можно получить через программу \texttt{harmonic\_wavefunction.py} (листинг \ref{code:psi_harmonic_analytical}).
-\begin{figure}[!h]
-    \label{fig:harmonic_levels}
-    \centering
-    \includegraphics[width=0.6\textwidth]{harmonic_levels}
-    \caption{Потенциал $V(x) = \frac{1}{2}\, x^2$, его уровни энергии и волновые функции.} 
-\end{figure}
-\newpage
 \pythonfile{../w5/programs_lecture_5/harmonic_wavefunction}{Рекурсивная формула для подсчета $\psi (x)$ (\texttt{harminic\_wavefunction.py})}{code:psi_harmonic_analytical}
 
 Основные свойства $\psi$:
@@ -49,13 +49,13 @@
 Для этого авторы предлагают насчитать $\cfrac{H \psi_{n}}{\psi_{n} }\, $ при разных $x$ и убедиться, что это примерно константа.
 Сама программа для проверки приведена на листинге \ref{code:psi_harmonic_check}.
 
-\pythonfile{../w5/programs_lecture_5/harmonic_wavefunction_check}{Проверка аналитической формулы для $\psi_\text{harmonic} (x)$}{code:psi_harmonic_check}
+\pythonfile{../w5/programs_lecture_5/harmonic_wavefunction_check}{Проверка аналитической формулы для $\psi_\text{harmonic} (x)$ (\texttt{hamonic\_wavefunction\_check.py})}{code:psi_harmonic_check}
 
 Обратите внимание, что в строке (19) используется дискретная аппроксимация второй производной (вычматы!).
 \begin{figure}[!h]
     \label{fig:harmonic_check}
     \centering
-    \includegraphics[width=0.6\textwidth]{harmonic_check}
+    \includegraphics[width=0.7\textwidth]{fig/harmonic_check}
     \caption{Численная проверка $H \psi_{n} / \psi_n$ при разных $x$}
 \end{figure}
 
@@ -76,7 +76,7 @@
 Стоит заметить, что в \eqref{eq:prob-E_n-coord_x} встречаются два "мира": классический Больцман и квантовый Шредингер.
 Тем не менее, ни уровни энергии $E_n$, ни волновые функции $\psi_n (x)$ не могут быть расчитаны, поэтому стоит искать другой подход.
 
-\section{Матрица плотности: минимум}
+\section{Матрица плотности: теоретический минимум}
 Другой способ описания лежит через \textit{матрицу плотности} $\rho (x, x\prime, \beta)$.
 О ней подробно рассказывается в Фейнмане \cite{feynman} (гл. 2 "Матрицы плотности"), откуда я любезно возьму большую часть материала.
 
@@ -208,7 +208,7 @@
     \end{aligned}
 \end{equation}
 
-Но самое главное, что можно подчерпнуть из \eqref{eq:prob-E_n-coord_x-via-rho} --- это \textit{свойство конволюции}.
+Но самое главное, что можно подчерпнуть из \eqref{eq:rho-via-E_n-coord_x} --- это \textit{свойство конволюции}.
 \subsection{Свойство конволюции}
 \begin{align}
     \label{eq:rho_convolution-derivation}
@@ -245,7 +245,7 @@
 
 В листинге \ref{code:matrix_square_harmonic} можно увидеть, как меняется от этого heatmap для $\rho (x, x', \beta)$.
 
-\pythonfile{../w5/programs_lecture_5/matrix_square_harmonic}{Программа для подсчета $\rho$ в приближении Trotter decomposition}{code:matrix_square_harmonic}
+\pythonfile{../w5/programs_lecture_5/matrix_square_harmonic}{Программа для подсчета $\rho$ в приближении Trotter decomposition(\texttt{matrix\_square\_harmonic.py})}{code:matrix_square_harmonic}
 
 \section{Path integral и метод Монте-Карло}
 Вычислять $\rho$ через \eqref{eq:rho-via-E_n-coord_x} очень затратно, поскольку почти невозможно удержать в памяти все $E_n$ и дискретную аппроксимацию $\psi (x)$.
@@ -279,7 +279,8 @@
 
 Если множество интегрирования (многомерный куб) разбить на множество кубиков одинакового объема $\Delta V$ (их будет $M^N$ штук), а вдоль каждой оси $x_i$ сделать выборку из $M$ точек, то в дискретной аппроксимации \eqref{eq:Z_N-times_convolution} перепишется в виде:
 \begin{align}
-    \label{eq:Z_N_times_convolution-discrete}
+    \label{eq:Z_N-times_convolution-discrete}
+    \nonumber
     & Z (\beta) \approx \sum\limits_{x_0 \in \{x_0^{(1)}, \dots, x_0^{(M)}\}} \dots \sum\limits_{x_{N-1} \in \{x_{N-1}^{(1)}, \dots, x_{N-1}^{(M)}\}}
     \rho (x_0, {\color{red} x_1}, \beta / N) \cdot \rho ({\color{red} x_1}, x_2, \beta / N) \cdot \dots \\
     & \ldots \cdot \rho (x_{N-2}, {\color{red} x_{N-1}}, \beta / N) \cdot \rho ({\color{red} x_{N-1}}, x_0, \beta / N) \Delta V
@@ -289,20 +290,45 @@
 Если это не так, то всегда функцию можно поделить на этот интеграл (предполагая, что он конечный) и тем самым нормировать.
 Для получения $Z(\beta)$ останется только в конце домножить на поделенное значение.
 
-В этом случае на функцию $\rho (x_i, x_{i+1}, \beta / N)$ в \eqref{eq:Z_N_times_convolution-discrete} можно смотреть как на функцию вероятности перехода из $x_i$ в $x_{i+1}$ в некотором марковском процессе. 
+\begin{wrapfigure}{r}{0.3\textwidth}
+    \label{fig:path-integral-schema}
+    \centering
+    \includegraphics[width=\linewidth]{fig/path-integral}
+    \caption{Иллюстрации пути в Path Integral}
+\end{wrapfigure}
+
+В этом случае на функцию $\rho (x_i, x_{i+1}, \beta / N)$ в \eqref{eq:Z_N-times_convolution-discrete} можно смотреть как на функцию вероятности перехода из $x_i$ в $x_{i+1}$ в некотором марковском процессе. 
 Тогда произведение внутри суммы $\rho (x_0, x_1, \beta /N)\cdot~\dots~\cdot\rho(x_{N-1}, x_0, \beta /N)$ есть вероятность пройти путь из $x_0$ в $x_0$, проходя при этом через промежуточные точки $x_1, x_2, \dots, x_{N-1} $, т.е. вероятность осуществить \textit{путь} $x_0 \rightarrow x_1 \rightarrow \dots \rightarrow x_{N-1} \rightarrow x_0$. 
 
-
-% \begin{wrapfigure}{r}{0.2\textwidth}
-%     \label{fig:path-integral-schema}
-%     \centering
-%     \includegraphics[width=0.2\textwidth]{path-integral}
-%     \caption{Иллюстрации пути в Path Integral}
-% \end{wrapfigure}
 Какую же тогда роль играет $\beta /N$?
 Посмотрим еще раз на произведение. Каждый из множителей как бы <<собирает>> $\beta /N$ до конечного состояния $\beta = N \cdot \beta /N$.
 Например, первые два множителя дадут своим вкладом $2\beta /N$, три множителя --- $3\beta /N$ и так далее.
 Этому свойству <<аккумулирования шаг за шагом>> удовлетворяет в марковских процессах \textit{время} : оно тоже за каждый дискретный шаг увеличивается на некоторую величину $\Delta \tau$.
 Можно тогда сказать, что $\beta /N$ является своего рода временем (в курсе его называют \textit{мнимым временем}), а сам процесс --- марковским переходом из $x_0$ в $x_0$ через $x_1, \dots, x_{N-1} $ с дискретным шагом времени $\Delta \tau = \beta /N$.
-Это можно изобразить на рисунке:
+Это можно изобразить на рисунке \ref{fig:path-integral-schema}.
+
+С произведение разобрались, взглянем теперь на сумму в \eqref{eq:Z_N-times_convolution-discrete}.
+Она представляет собой суммирование по всевозможным значениям $x_0, x_1, \dots, x_{N-1}$.
+Поскольку $x_1, x_2, \dots, x_{N-1}$ задают промежуточные координаты, фактически идет суммирование по всем возможным положениям промежуточных точек. Иначе говоря, \textbf{интеграл представляет из себя суммирование по всем возможным путям}.
+Суммирование по $x_0$ отвечает тому, что мы еще двигаем начальную точку $x_0$.
+
+Осталось только понять, какие пути мы рассматриваем.
+Поскольку в интеграле \eqref{eq:Z_N-times_convolution} пределы везде от $-\infty$ до $+\infty$, в путях надо сэмплировать все $x_i \in (-\infty, +\infty)$.
+Разумеется, это недостижимо на компьютере, поэтому обычно ограничиваются неким большим диапазоном, на краях которого $\rho$ почти принимает нулевое значение.
+В дальнейшей части курса мы столкнемся с этим.
+
+\subsection{Получение $\rho (x_0, x', \beta)$ через Path Integral}
+
+Легко видеть, что в суммировании \eqref{eq:Z_N-times_convolution-discrete} можно опустить суммирование по $x_0$, а в качестве последней точки выбрать не $x_0$, а $x'$.
+Математически, это приведет нас к $\rho (x, x', \beta)$.
+А вот с точки зрения алгоритма будует следующие изменения: \textit{пути} теперь будут начинаться в $x_0$, заканчиваться в $x'$ и не будет никаких суммирований по положениям начальной/конечной точки.
+
+В курсе приводится пример программы для подсчета путей в гармоническом потенциале --- листинг \ref{code:naive_harmonic_path}.
+На каждом шаге сэмплируются не все $x_i$, а только один (выбирается случайно в строке 13).
+
+Разложение Trotter находится в строках 18, 21.
+Обратите внимание, что в нем стоит множитель $1 /2$, а не $1 /4$, как можно было бы заключить из $e^{-\frac{\beta}{2}\, V(x)} = e^{-\frac{\beta}{2}\, \frac{x^2}{2}\,}$.
+Причина этому --- перемножение двух таких экспонент на стыке $\rho (x_{i-1}, x_i, \beta /N) \rho (x_i, x_{i+1} , \beta /N)$ в \eqref{eq:Z_N-times_convolution} (см. формулу Trotter decomposition \eqref{eq:trotter-decomposition-definition}).
+\pythonfile{../w5/programs_lecture_5/naive_harmonic_path}{Программа для подсчета путей в приближении Trotter decomposition для гармонического потенциала (\texttt{naive\_harmonic\_path.py})}{code:naive_harmonic_path}
+
 \end{lecture}
