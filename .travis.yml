@@ -3,7 +3,7 @@ services:
   - docker
 
 script:
-  - docker run -v `pwd`:/data:Z sigan/latex latexmk main
+  - docker run -v `pwd`:/data:Z sigan/latex latexmk -pdf -pdflatex="pdflatex %O %S" main
 deploy:
   provider: releases
   skip-cleanup: true
