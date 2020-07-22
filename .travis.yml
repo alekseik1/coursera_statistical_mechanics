@@ -11,3 +11,5 @@ deploy:
   file_glob: true
   file: "*.pdf"
   overwrite: true
+  on:
+    tags: true
