@@ -75,7 +75,7 @@
 
     \subsection{Сведение циклов в перестановках к слоям в Path Integral}
 
-    \begin{wrapfigure}{r}{0.2\linewidth}
+    \begin{wrapfigure}[8]{r}{0.25\linewidth}
         \includegraphics[width=\linewidth]{fig/permutation-cycle}
         \caption{Графическое отображение перестановки $(0)(132)$.}
         \label{fig:permutation-cycle}
@@ -89,12 +89,14 @@
     \begin{align}
         \label{eq:Z_0_132-full}
         & Z_{(0)(132)} = \int dx_0 dx_1 dx_2 dx_3\, \rho(\{x_0, x_1, x_2, x_3\}; \{P(x_0), P(x_1), P(x_2), P(x_3)\}) = \\
+        \nonumber
         & \int dx_0\, \rho(x_0, x_0, \beta) \int dx_1 \int dx_2 \int dx_3\, \rho(x_1, {\color{red} x_3}, \beta) \rho({\color{blue} x_2}, x_1, \beta) \rho({\color{red} x_3}, {\color{blue} x_2}, \beta) = \\
+        \nonumber
         & \int dx_0 \rho(x_0, x_0, \beta) \int dx_1 \int dx_2 \rho(x_1, x_1, 3\beta)
     \end{align}
 Здесь мы воспользовались тем, что $\rho$ для системы невзаимодействующих частиц факторизуется \eqref{eq:rho-bosons-ideal-factorized}, а также свойством конволюции \eqref{eq:rho_convolution-derivation} последовательно несколько раз.
 
-Вот мы и пришли к решению: для интеграла по $x_0$ можно сэмплировать непосредственно из матрицы плотности $\rho^{\text{harmonic}}$ (не забываем, что мы рассматриваем систему в гармоническом потенциале) при температуре $\beta$.
+Вот мы и пришли к решению: для интеграла по $x_0$ можно сэмплировать непосредственно из матрицы плотности $\rho^{\text{harmonic}}$ (т.к. мы рассматриваем систему в гармоническом потенциале) при температуре $\beta$.
 Для интеграла $x_1$ мы запускаем Lévy path sampling при температуре $3\beta$ и тремя слоями. \textit{Эти матрицы, способ их получения и алгоритм Lévy sampling для гармонического осциллятора были в домашке к неделе 6}.
 Точки $x_1, x_2, x_3$ при этом есть промежуточные точки при Lévy sampling с $3\beta$ для гармонического потенциала (см. секцию \ref{sec:levy-harmonic}).
 
@@ -119,7 +121,11 @@
 
 Рассмотрим пример.
 Возьмем нашу перестановку ${}^{[0, {\color{red} 3}, {\color{blue} 1}, 2]}_{[0, 1, 2, 3]}$ и попробуем в ней переставить 3 и 1 так, что получится перестановка ${}^{[0, {\color{blue} 1}, {\color{red} 3}, 2]}_{[0, 1, 2, 3]}$.
-В этом случае $\pi_\text{old} \propto \rho^{\text{harm}} (x_1, x_3, \beta) \rho^{\text{harm}}(x_2, x_1, \beta)$, а $\pi_\text{new} \propto \rho^{\text{harm}}(x_1, x_1, \beta) \rho^{\text{harm}}(x_2, x_3, \beta)$.
+В этом случае
+\begin{align*}
+    & \pi_\text{old} \propto \rho^{\text{harm}} (x_1, x_3, \beta) \rho^{\text{harm}}(x_2, x_1, \beta) \\
+    & \pi_\text{new} \propto \rho^{\text{harm}}(x_1, x_1, \beta) \rho^{\text{harm}}(x_2, x_3, \beta)
+\end{align*}
 Соответственно, принимаем это изменение с вероятностью $p_\text{acc} (\text{old} \rightarrow \text{new}) = \min\left( 1, \frac{\pi_\text{new}}{\pi_\text{old}}\, \right)$.
 
 \section{Реализация алгоритма}
